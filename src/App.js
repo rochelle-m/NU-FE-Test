@@ -40,7 +40,7 @@ function App() {
           <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
               <TableHead>
-                <TableRow>
+                <TableRow className="row-head">
                   <TableCell>
                     <strong>Name</strong>
                   </TableCell>
@@ -60,7 +60,7 @@ function App() {
               </TableHead>
               <TableBody>
                 {countriesData.map(({name, flag, capital, population, region}) => (
-                  <TableRow>
+                  <TableRow className="row">
                     <TableCell component="th" scope="row">
                       {name}
                     </TableCell>

@@ -1,0 +1,21 @@
+.row-head {
+    border-bottom: 2px solid #333;
+}
+
+.row {
+    cursor: pointer;
+    transition: .4s linear;
+}
+
+.row:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+.row:nth-child(2n) {
+    background-color: gainsboro;
+}
+
+.row:nth-child(2n):hover {
+    background-color: rgb(195, 195, 195);
+}
+
