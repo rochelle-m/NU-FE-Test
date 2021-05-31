@@ -62,12 +62,12 @@ function App() {
                 {countriesData.map((country) => (
                   <TableRow>
                     <TableCell component="th" scope="row">
-                      {country.capital}
+                      {country.name}
                     </TableCell>
                     <TableCell align="right">
                       <img src={country.flag} alt="" width="32px" />
                     </TableCell>
-                    <TableCell align="right">{country.name}</TableCell>
+                    <TableCell align="right">{country.capital}</TableCell>
                     <TableCell align="right">{country.population}</TableCell>
                     <TableCell align="right">{country.region}</TableCell>
                   </TableRow>
