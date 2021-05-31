@@ -9,6 +9,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import axios from "axios";
+import CountryDetails from "./CountryDetails";
 import "./App.css";
 
 const countriesURL = "https://restcountries.eu/rest/v2/all";
@@ -23,6 +24,9 @@ function App() {
   const [countriesData, setCountriesData] = useState([]);
   const classes = useStyles();
 
+  const [displayCountryDetails, setDisplayCountryDetails] = useState(false);
+  const [countryDetails, setCountryDetails] = useState([]);
+
   const getCountriesWithAxios = async () => {
     const response = await axios.get(countriesURL);
     setCountriesData(response.data);
@@ -33,8 +37,18 @@ function App() {
     getCountriesWithAxios();
   }, []);
 
+  const openSideDrawer = function (country) {
+    setCountryDetails(country)
+    setDisplayCountryDetails(true)
+  }
+
+  const closeSideDrawer = function () {
+    setDisplayCountryDetails(false)
+  }
+
   return (
     <>
+    {displayCountryDetails && <CountryDetails close={closeSideDrawer} country={countryDetails}/>}
       <Grid container>
         <Grid item xs={12}>
           <TableContainer component={Paper}>
@@ -59,17 +73,17 @@ function App() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {countriesData.map(({name, flag, capital, population, region}) => (
-                  <TableRow className="row">
+                {countriesData.map((country) => (
+                  <TableRow className="row" onClick={() => openSideDrawer(country)}>
                     <TableCell component="th" scope="row">
-                      {name}
+                      {country.name}
                     </TableCell>
                     <TableCell align="right">
-                      <img src={flag} alt="" width="32px" />
+                      <img src={country.flag} alt="" width="32px" />
                     </TableCell>
-                    <TableCell align="right">{capital}</TableCell>
-                    <TableCell align="right">{population}</TableCell>
-                    <TableCell align="right">{region}</TableCell>
+                    <TableCell align="right">{country.capital}</TableCell>
+                    <TableCell align="right">{country.population}</TableCell>
+                    <TableCell align="right">{country.region}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
