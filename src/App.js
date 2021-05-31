@@ -59,17 +59,17 @@ function App() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {countriesData.map((country) => (
+                {countriesData.map(({name, flag, capital, population, region}) => (
                   <TableRow>
                     <TableCell component="th" scope="row">
-                      {country.name}
+                      {name}
                     </TableCell>
                     <TableCell align="right">
-                      <img src={country.flag} alt="" width="32px" />
+                      <img src={flag} alt="" width="32px" />
                     </TableCell>
-                    <TableCell align="right">{country.capital}</TableCell>
-                    <TableCell align="right">{country.population}</TableCell>
-                    <TableCell align="right">{country.region}</TableCell>
+                    <TableCell align="right">{capital}</TableCell>
+                    <TableCell align="right">{population}</TableCell>
+                    <TableCell align="right">{region}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
