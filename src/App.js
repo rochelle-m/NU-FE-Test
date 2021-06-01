@@ -8,12 +8,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import axios from "axios";
 import CountryDetails from "./CountryDetails";
 import "./App.css";
@@ -28,38 +23,37 @@ const useStyles = makeStyles({
     margin: 0,
     width: 500,
   },
-  closeButton: {
-    position: 'absolute',
-    top: 2,
-    right: 2,
-    color: 'gray',
-  },
 });
 
 function App() {
   const [countriesData, setCountriesData] = useState([]);
   const [countryDetails, setCountryDetails] = useState({});
-  const [open, setOpen] = React.useState(false);
+  const [state, setState] = React.useState(false);
 
   const classes = useStyles();
 
   const getCountriesWithAxios = async () => {
     const response = await axios.get(countriesURL);
     setCountriesData(response.data);
-    setCountriesData(response.data);
   };
 
   useEffect(() => {
     getCountriesWithAxios();
   }, []);
-  
-  const handleClickOpen = (country) => {
-    setCountryDetails(country)
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+
+  const toggleDrawer =
+    (open, country = null) =>
+    (event) => {
+      if (
+        event &&
+        event.type === "keydown" &&
+        (event.key === "Tab" || event.key === "Shift")
+      ) {
+        return;
+      }
+      setCountryDetails(country);
+      setState(open);
+    };
 
   return (
     <>
@@ -88,7 +82,11 @@ function App() {
               </TableHead>
               <TableBody>
                 {countriesData.map((country) => (
-                  <TableRow onClick={() => {handleClickOpen(country)}} hover className="row">
+                  <TableRow
+                    onClick={toggleDrawer(true, country)}
+                    hover
+                    className="row"
+                  >
                     <TableCell component="th" scope="row">
                       {country.name}
                     </TableCell>
@@ -105,19 +103,14 @@ function App() {
           </TableContainer>
         </Grid>
       </Grid>
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} maxWidth="md">
-        <DialogTitle className={classes.root}>
-          <span>{countryDetails.name} </span>
-          <img src={countryDetails.flag} alt="" width="32px" />
-          <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <Divider />
-        <DialogContent>
-            <CountryDetails {...countryDetails}/>
-        </DialogContent>
-      </Dialog>
+      <SwipeableDrawer
+        anchor="right"
+        open={state}
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true, countryDetails)}
+      >
+        <CountryDetails {...countryDetails} toggleDrawer={toggleDrawer} />
+      </SwipeableDrawer>
     </>
   );
 }
