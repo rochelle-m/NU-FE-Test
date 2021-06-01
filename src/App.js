@@ -8,6 +8,12 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import axios from "axios";
 import CountryDetails from "./CountryDetails";
 import "./App.css";
@@ -18,14 +24,24 @@ const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
+  root: {
+    margin: 0,
+    width: 300,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 1,
+    right: 1,
+    color: 'gray',
+  },
 });
 
 function App() {
   const [countriesData, setCountriesData] = useState([]);
-  const classes = useStyles();
+  const [countryDetails, setCountryDetails] = useState({});
+  const [open, setOpen] = React.useState(false);
 
-  const [displayCountryDetails, setDisplayCountryDetails] = useState(false);
-  const [countryDetails, setCountryDetails] = useState([]);
+  const classes = useStyles();
 
   const getCountriesWithAxios = async () => {
     const response = await axios.get(countriesURL);
@@ -36,19 +52,17 @@ function App() {
   useEffect(() => {
     getCountriesWithAxios();
   }, []);
-
-  const openSideDrawer = function (country) {
+  
+  const handleClickOpen = (country) => {
     setCountryDetails(country)
-    setDisplayCountryDetails(true)
-  }
-
-  const closeSideDrawer = function () {
-    setDisplayCountryDetails(false)
-  }
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
-    {displayCountryDetails && <CountryDetails close={closeSideDrawer} country={countryDetails}/>}
       <Grid container>
         <Grid item xs={12}>
           <TableContainer component={Paper}>
@@ -74,7 +88,7 @@ function App() {
               </TableHead>
               <TableBody>
                 {countriesData.map((country) => (
-                  <TableRow className="row" onClick={() => openSideDrawer(country)}>
+                  <TableRow className="row" onClick={() => {handleClickOpen(country)}}>
                     <TableCell component="th" scope="row">
                       {country.name}
                     </TableCell>
@@ -91,6 +105,17 @@ function App() {
           </TableContainer>
         </Grid>
       </Grid>
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+        <DialogTitle disableTypography className={classes.root}>
+          <Typography variant="h6">{countryDetails.name}</Typography>
+          <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+            <CountryDetails {...countryDetails}/>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
