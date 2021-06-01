@@ -11,7 +11,7 @@ import Paper from "@material-ui/core/Paper";
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import axios from "axios";
@@ -26,12 +26,12 @@ const useStyles = makeStyles({
   },
   root: {
     margin: 0,
-    width: 300,
+    width: 500,
   },
   closeButton: {
     position: 'absolute',
-    top: 1,
-    right: 1,
+    top: 2,
+    right: 2,
     color: 'gray',
   },
 });
@@ -88,7 +88,7 @@ function App() {
               </TableHead>
               <TableBody>
                 {countriesData.map((country) => (
-                  <TableRow className="row" onClick={() => {handleClickOpen(country)}}>
+                  <TableRow onClick={() => {handleClickOpen(country)}} hover className="row">
                     <TableCell component="th" scope="row">
                       {country.name}
                     </TableCell>
@@ -105,13 +105,15 @@ function App() {
           </TableContainer>
         </Grid>
       </Grid>
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-        <DialogTitle disableTypography className={classes.root}>
-          <Typography variant="h6">{countryDetails.name}</Typography>
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} maxWidth="md">
+        <DialogTitle className={classes.root}>
+          <span>{countryDetails.name} </span>
+          <img src={countryDetails.flag} alt="" width="32px" />
           <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
+        <Divider />
         <DialogContent>
             <CountryDetails {...countryDetails}/>
         </DialogContent>
